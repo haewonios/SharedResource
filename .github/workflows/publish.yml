@@ -2,7 +2,7 @@ name: Publish to GitHub Packages
 
 on:
   push:
-    branches: [ main ]  # main 브랜치에 푸시하면 배포 시작!
+    branches: [ main ] 
 
 jobs:
   publish:
@@ -22,15 +22,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 1. 패키지 준비 (이미급 포함 및 경로 수정)
+      # 패키지 준비 
       - name: Prepare Package
         run: ./gradlew :shared:preparePublish
 
-      # 2. 깃허브 NPM 저장소로 업로드 (진짜 배포!)
+      # 깃허브 NPM 저장소로 업로드
       - name: Publish to GitHub NPM
         run: |
           cd shared/build/dist/js/productionLibrary
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-          npm publish
+          npm config set //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+          npm publish --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -37,7 +37,7 @@ kotlin {
 
 // 1. JS 타겟 설정
     js(IR) {
-        moduleName = "shared-resource" 
+        moduleName = "@haewonios/shared-resource"
         browser {
             // 라이브러리 형태로 빌드하도록 설정
             binaries.library()
@@ -105,22 +105,6 @@ multiplatformResources {
     multiplatformResourcesPackage = "com.haewon.sharedresource"
     multiplatformResourcesClassName = "SharedResource"
 //    multiplatformResourcesSourceSet = "commonMain"
-}
-
-// NPM 패키지 메타데이터 설정
-tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask>().configureEach {
-    doLast {
-        val packageJsonFile = packageJson.get()
-        if (packageJsonFile.exists()) {
-            val content = packageJsonFile.readText()
-            // 필요한 메타데이터를 직접 주입합니다.
-            val updatedContent = content.replace(
-                "\"name\": \"shared-resource\"",
-                "\"name\": \"@haewonios/shared-resource\",\n  \"version\": \"1.0.0\",\n  \"description\": \"KMP Shared Resource for React\",\n  \"repository\": \"https://github.com/haewonios/SharedResource\",\n  \"license\": \"MIT\""
-            )
-            packageJsonFile.writeText(updatedContent)
-        }
-    }
 }
 
 tasks.register("preparePublish") {
