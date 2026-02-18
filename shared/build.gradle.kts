@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 // 1. 배포 버전 설정 
-version = "1.0.2"
+version = "1.0.3"
 
 plugins {
     kotlin("multiplatform")
