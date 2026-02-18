@@ -7,24 +7,25 @@ import dev.icerock.moko.resources.ImageResource
 
 @JsExport
 class ColorData(
-    val mainBrand: String,
-    val subBrand: String,
-    val white: String,
-    val black: String,
-    val error: String
+    @JsName("mainBrand") val mainBrand: String,
+    @JsName("subBrand") val subBrand: String,
+    @JsName("white") val white: String,
+    @JsName("black") val black: String,
+    @JsName("error") val error: String
 )
 
 @JsExport
 class ImageData(
-    val home: String,
-    val chat: String,
-    val location: String,
-    val profile: String,
-    val users: String
+    @JsName("home") val home: String,
+    @JsName("chat") val chat: String,
+    @JsName("location") val location: String,
+    @JsName("profile") val profile: String,
+    @JsName("users") val users: String
 )
 
 @JsExport
 object AppResources {
+    @JsName("colors")
     val colors = ColorData(
         mainBrand = getColorHex(SharedResource.colors.main_brand),
         subBrand = getColorHex(SharedResource.colors.sub_brand),
@@ -33,6 +34,7 @@ object AppResources {
         error = getColorHex(SharedResource.colors.error)
     )
 
+    @JsName("images")
     val images = ImageData(
         home = SharedResource.images.home.fileUrl,
         chat = SharedResource.images.chat.fileUrl,
