@@ -1,5 +1,8 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
+// 1. 배포 버전 설정 
+version = "1.0.0"
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -22,6 +25,22 @@ kotlin {
             // iOS에서의 리소스 접근 위해 추가
             export("dev.icerock.moko:resources:0.23.0")
             xcf.add(this)
+        }
+    }
+
+    // // 웹(Wasm) 타겟 추가
+    // @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+    // wasmJs {
+    //     browser()
+    //     binaries.executable()
+    // }
+
+// 1. JS 타겟 설정
+    js(IR) {
+        moduleName = "shared-resource" 
+        browser {
+            // 라이브러리 형태로 빌드하도록 설정
+            binaries.library()
         }
     }
 
@@ -60,6 +79,10 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
+        // 2. JS 소스셋 설정
+        val jsMain by getting {
+            dependsOn(commonMain)
+        }
     }
 }
 
@@ -82,4 +105,37 @@ multiplatformResources {
     multiplatformResourcesPackage = "com.haewon.sharedresource"
     multiplatformResourcesClassName = "SharedResource"
 //    multiplatformResourcesSourceSet = "commonMain"
+}
+
+// NPM 패키지 메타데이터 설정
+tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask>().configureEach {
+    packageJson.set {
+        name = "@haewonios/shared-resource"
+        version = rootProject.version.toString()
+        description = "KMP Shared Resource for React"
+        repository = "https://github.com/haewonios/SharedResource" 
+        license = "MIT"
+    }
+}
+
+tasks.register("preparePublish") {
+    dependsOn("jsBrowserProductionLibraryDistribution")
+    doLast {
+        val distDir = layout.buildDirectory.dir("dist/js/productionLibrary").get().asFile
+        val imgSource = layout.buildDirectory.dir("generated/moko/jsMain/comhaewonsharedresource/res/images").get().asFile
+        
+        // 이미지 폴더를 패키지 내부로 복사
+        if (imgSource.exists()) {
+            val imgDest = File(distDir, "images")
+            imgSource.copyRecursively(imgDest, true)
+        }
+        
+        // JS 코드 내의 이미지 경로 에러 자동 수정
+        distDir.listFiles()?.forEach { file ->
+            if (file.name.endsWith(".js")) {
+                val content = file.readText().replace("require(\"images/", "require(\"./images/")
+                file.writeText(content)
+            }
+        }
+    }
 }

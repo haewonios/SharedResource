@@ -7,9 +7,9 @@ plugins {
     id("dev.icerock.mobile.multiplatform-resources").version("0.23.0").apply(false)
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
-}
+//tasks.register("clean", Delete::class) {
+//    delete(rootProject.buildDir)
+//}
 
 buildscript {
     dependencies {
