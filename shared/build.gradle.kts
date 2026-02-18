@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 // 1. 배포 버전 설정 
-version = "1.0.0"
+version = "1.0.1"
 
 plugins {
     kotlin("multiplatform")
@@ -37,7 +37,7 @@ kotlin {
 
 // 1. JS 타겟 설정
     js(IR) {
-        moduleName = "@haewonios/shared-resource"
+        moduleName = "shared-resource"
         browser {
             // 라이브러리 형태로 빌드하도록 설정
             binaries.library()
@@ -117,6 +117,15 @@ tasks.register("preparePublish") {
         if (imgSource.exists()) {
             val imgDest = File(distDir, "images")
             imgSource.copyRecursively(imgDest, true)
+        }
+
+        val pkgJson = File(distDir, "package.json")
+        if (pkgJson.exists()) {
+            val content = pkgJson.readText().replace(
+                "\"name\": \"shared-resource\"", 
+                "\"name\": \"@haewonios/shared-resource\""
+            )
+            pkgJson.writeText(content)
         }
         
         // JS 코드 내의 이미지 경로 에러 자동 수정
