@@ -109,12 +109,17 @@ multiplatformResources {
 
 // NPM 패키지 메타데이터 설정
 tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask>().configureEach {
-    packageJson.set {
-        name = "@haewonios/shared-resource"
-        version = rootProject.version.toString()
-        description = "KMP Shared Resource for React"
-        repository = "https://github.com/haewonios/SharedResource" 
-        license = "MIT"
+    doLast {
+        val packageJsonFile = packageJson.get()
+        if (packageJsonFile.exists()) {
+            val content = packageJsonFile.readText()
+            // 필요한 메타데이터를 직접 주입합니다.
+            val updatedContent = content.replace(
+                "\"name\": \"shared-resource\"",
+                "\"name\": \"@haewonios/shared-resource\",\n  \"version\": \"1.0.0\",\n  \"description\": \"KMP Shared Resource for React\",\n  \"repository\": \"https://github.com/haewonios/SharedResource\",\n  \"license\": \"MIT\""
+            )
+            packageJsonFile.writeText(updatedContent)
+        }
     }
 }
 
