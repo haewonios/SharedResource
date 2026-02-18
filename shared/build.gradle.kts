@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 // 1. 배포 버전 설정 
-version = "1.0.1"
+version = "1.0.2"
 
 plugins {
     kotlin("multiplatform")
@@ -129,11 +129,11 @@ tasks.register("preparePublish") {
         }
         
         // JS 코드 내의 이미지 경로 에러 자동 수정
-        distDir.listFiles()?.forEach { file ->
-            if (file.name.endsWith(".js")) {
-                val content = file.readText().replace("require(\"images/", "require(\"./images/")
-                file.writeText(content)
-            }
+        distDir.walkTopDown().filter { it.name.endsWith(".js") }.forEach { file ->
+            val content = file.readText()
+                .replace("require(\"images/", "require(\"./images/")
+                .replace("require('images/", "require('./images/")
+            file.writeText(content)
         }
     }
 }
