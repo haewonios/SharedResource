@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_brand">
+        <light>#FFCCBC</light>
+        <dark>#E64A19</dark>
+    </color>
+        <color name="sub_brand">#00BCD4</color>
+
+        <color name="white">#FFFFFF</color>
+        <color name="black">#222222</color>
+        <color name="gray_light">#F5F5F5</color>
+        <color name="gray_medium">#9E9E9E</color>
+        <color name="gray_dark">#616161</color>
+
+        <color name="error">#E53935</color>
+        <color name="success">#43A047</color>
+        <color name="warning">#FFB300</color>
+        <color name="info">#1E88E5</color>
+
+        <color name="price_red">#FF0000</color>
+        <color name="divider">#EEEEEE</color>
+</resources>
